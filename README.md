@@ -34,6 +34,62 @@ Online assessment platforms (HackerRank, Mercer Mettl, Codility) frequently intr
 
 ---
 
+## 🏗️ System Architecture & Candidate Journey Flow
+
+PlacementPrep Pro is engineered with a **fault-tolerant, anxiety-reducing candidate testing state machine**, ensuring test progress persists across connectivity drops while enforcing academic proctoring integrity.
+
+```mermaid
+flowchart TD
+    subgraph CandidateEntry ["🔐 Authentication & Integrity Verification"]
+        Login["Institutional SSO / Roll Number Verification"]
+        HallTicket["Exam Passcode & Identity Check"]
+        ProctorAudit["Hardware Check (Webcam, Mic, Fullscreen Lock)"]
+    end
+
+    subgraph ExaminationEngine ["💻 Proctored Examination Engine"]
+        TestRunner["Active Test Session (Split-Screen Workspace)"]
+        QuestionPalette{"Question Palette State Machine:\n• Answered (Green)\n• Skipped (Red)\n• Review (Purple)\n• Unvisited (Gray)"}
+        CodeRunner["Sandboxed Code Execution Console (Test Cases)"]
+        AutoSaveTelemetry["30s Periodic Client Auto-Save Sync"]
+    end
+
+    subgraph IntegritySafeguards ["🛡️ Anti-Cheating & Proctoring Telemetry"]
+        TabFocusWatcher["Browser Tab Blur & Multi-Window Detector"]
+        WebcamStream["Facial Presence & Gaze Tracking Stream"]
+        WarningEngine["Soft-Toast Violation Notification Engine"]
+    end
+
+    subgraph SubmissionEcosystem ["📊 Attempt Finalization & Scoring"]
+        SubmitValve["Accidental Submission Safety Valve (Attempt Summary)"]
+        EvaluationEngine["Automated Testcase Grading & Plagiarism Check"]
+        ResultsDashboard["Candidate Performance & Percentile Analytics"]
+    end
+
+    Login --> HallTicket --> ProctorAudit
+    ProctorAudit --> TestRunner
+    
+    TestRunner <--> QuestionPalette
+    TestRunner <--> CodeRunner
+    TestRunner --> AutoSaveTelemetry
+    
+    TestRunner <--> TabFocusWatcher & WebcamStream
+    TabFocusWatcher --> WarningEngine
+    
+    TestRunner --> SubmitValve
+    SubmitValve -->|Explicit Confirmation| EvaluationEngine --> ResultsDashboard
+```
+
+### 🔬 Candidate Journey & Architecture Breakdown
+
+1. **Anti-Anxiety Question Palette State Machine**:
+   - The question palette is a high-visibility persistent grid communicating progress in real-time. Candidates can toggle between sections (Aptitude, Core Technical, Coding) with instantaneous state preservation.
+2. **Deterministic Auto-Save Safeguard**:
+   - Every keystroke in the Monaco code editor and radio selection in the MCQ module is committed to local memory and synchronized to the test server in 30-second heartbeats, completely mitigating data loss during network hiccups.
+3. **Accidental-Submission Safety Valve**:
+   - Clicking "End Test" does not trigger immediate finalization; instead, it opens a high-contrast modal summarizing unanswered questions and flagged items, requiring intentional confirmation before grading.
+
+---
+
 ## 4. End-to-End Design Workflow & Artifacts
 
 ### 🗺️ Step 1: Complete UX User Flow Mapping
